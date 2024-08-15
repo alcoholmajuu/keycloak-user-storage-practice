@@ -1,0 +1,25 @@
+services:
+  keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+        KEYCLOAK_ADMIN: developer
+        KEYCLOAK_ADMIN_PASSWORD: developer
+    depends_on:
+      - mysql
+    volumes:
+      - /home/ubuntu/keycloak-user-storage-practice/target/user-storage-properties.jar:/opt/keycloak/providers/user-storage-properties.jar
+mysql:
+    image: mysql:latest
+    ports:
+        - 3306:3306
+    environment:
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE: keycloak
+        MYSQL_USER: developer
+        MYSQL_PASSWORD: developer
+    volumes:
+        - /home/ubuntu/keycloak-user-storage-practice/init.sql:/docker-entrypoint-initdb.d/init.sql
